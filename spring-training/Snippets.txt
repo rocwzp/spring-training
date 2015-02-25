@@ -1,0 +1,1376 @@
+Spring CookBook
+-----------------
+
+	<properties>
+		<java.version>1.7</java.version>
+		<junit.version>4.11</junit.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<logback.version>1.0.13</logback.version>
+		<spring.version>4.0.0.RELEASE</spring.version>
+		<spring-data-jpa.version>1.4.1.RELEASE</spring-data-jpa.version>
+		<spring-security.version>3.2.0.RELEASE</spring-security.version>
+		<hibernate.version>4.2.6.Final</hibernate.version>
+		<aspectj.version>1.7.2</aspectj.version>
+		<mysql.version>5.1.26</mysql.version>
+		<jackson-json.version>2.3.1</jackson-json.version>
+		<commons-dbcp.version>1.2.2</commons-dbcp.version>
+		<commons-lang3.version>3.1</commons-lang3.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			
+			<!-- Logging dependencies -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+		
+
+		<!-- Spring dependencies -->
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<!-- Spring Data JPA dependencies -->
+		
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>${spring-data-jpa.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		
+		<!-- SpringSecurity dependencies -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+
+		
+
+		<!-- Testing dependencies -->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		
+
+		<!-- DB dependencies -->
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+		</dependency>
+				
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>${commons-dbcp.version}</version>
+		</dependency>
+				
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-json.version}</version>
+		</dependency>
+
+		<!-- Web dependencies -->
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		</dependencies>
+	</dependencyManagement>
+
+	
+</project>
+
+
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>app.log</file>
+
+    <encoder>
+      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <logger name="com.sivalabs">
+    <appender-ref ref="STDOUT" />
+	<appender-ref ref="FILE" />
+  </logger>
+  
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+	<appender-ref ref="FILE" />
+  </root>
+</configuration>
+
+public class User 
+{
+	private int id;
+	private String name;
+	private String email;
+	private Date dob;
+	..
+}
+
+@Service
+public class UserService 
+{
+	//@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	public UserService(UserDao userDao) {
+		this.userDao = userDao;
+	}
+	
+	public List<User> findAll() {
+		return userDao.findAll();
+	}
+}
+
+public interface UserDao {
+
+	public List<User> findAll();
+
+}
+
+@Repository
+public class InMemoryUserDaoImpl implements UserDao 
+{
+	
+	private static final Map<Integer, User> USER_MAP = new HashMap<>();
+	private static final AtomicInteger ID_GEN = new AtomicInteger(0);
+	
+	static
+	{
+		User admin = new User(ID_GEN.incrementAndGet(), "Administrator", "admin@gmail.com", new Date());
+		User test = new User(ID_GEN.incrementAndGet(), "Test", "test@gmail.com", null);
+		USER_MAP.put(admin.getId(), admin);
+		USER_MAP.put(test.getId(), test);
+	}
+	
+	@Override
+	public List<User> findAll() {
+		return new ArrayList<>(USER_MAP.values());
+	}
+
+}
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 
+	<bean id="userService" class="com.sivalabs.springapp.UserService">
+		<constructor-arg ref="userDao"/>
+	</bean>
+	
+	<bean id="userDao" class="com.sivalabs.springapp.InMemoryUserDaoImpl">
+	
+	</bean>
+	 --> 	 
+	 <context:component-scan base-package="com.sivalabs.springapp"/>
+	 
+</beans>
+
+
+
+public class Main 
+{
+
+	@SuppressWarnings("resource")
+	public static void main(String[] args) 
+	{
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+		UserService userService = ctx.getBean(UserService.class);
+		List<User> users = userService.findAll();
+		for (User user : users) {
+			System.out.println(user);
+		}
+	}
+}
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:applicationContext.xml"})
+public class UserServiceTest 
+{
+	@Autowired
+	private UserService userService;
+	
+	@Test
+	public void findAllUsers()  {
+		List<User> users = userService.findAll();
+		assertNotNull(users);
+		assertTrue(!users.isEmpty());
+	}
+}
+
+=====================================================================================================================
+
+
+@Configuration
+@ComponentScan(basePackages={"com.sivalabs.springapp"}, 
+	excludeFilters=@ComponentScan.Filter(type=FilterType.ANNOTATION, value={Service.class, Repository.class}))
+@EnableAspectJAutoProxy
+//@ImportResource(value="classpath:applicationContext.xml")
+public class AppConfig {
+
+	
+	@Bean
+	public UserService userService() {
+		return new UserService(userDao());
+	}
+	
+	public UserDao userDao() {
+		return new InMemoryUserDaoImpl();
+	}
+	
+}
+
+@Aspect
+@Component
+public class LoggingAspect {
+ 
+	@Before("execution(* com.sivalabs.springapp.*.*(..))")
+	public void logBefore(JoinPoint joinPoint) {
+ 
+		System.out.println("logBefore() is running!");
+		System.out.println("Executing : " + joinPoint.getSignature().getName());
+		System.out.println("******");
+	}
+ 
+	@After("execution(* com.sivalabs.springapp.*.*(..))")
+	public void logAfter(JoinPoint joinPoint) {
+ 
+		System.out.println("logAfter() is running!");
+		System.out.println("completed : " + joinPoint.getSignature().getName());
+		System.out.println("******");
+	}
+	
+	@Around("execution(* com.sivalabs.springapp.*.*(..))")
+	public void logArounf(ProceedingJoinPoint joinPoint) {
+ 
+		System.out.println("logAfter() is running!");
+		System.out.println("completed : " + joinPoint.getSignature().getName());
+		System.out.println("******");
+	}
+	
+}
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes=AppConfig.class)
+public class UserServiceTest 
+{
+	...
+}
+
+public static void main(String[] args) 
+{
+	ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+	UserService userService = ctx.getBean(UserService.class);
+	...
+}
+
+=========================================================================================================================
+<!-- application.properties -->
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/training
+jdbc.username=root
+jdbc.password=admin
+int-db=true
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<context:property-placeholder location="classpath:application.properties"/>
+	
+	<tx:annotation-driven/>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" 
+			p:dataSource-ref="dataSource"/>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	    <property name="driverClassName" value="${jdbc.driverClassName}"/>
+	    <property name="url" value="${jdbc.url}"/>
+	    <property name="username" value="${jdbc.username}"/>
+	    <property name="password" value="${jdbc.password}"/>
+	    <property name="validationQuery" value="SELECT 1"/>
+	</bean>
+	 
+</beans>
+
+
+/**
+ * 
+ */
+package com.sivalabs.springapp;
+
+
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+/**
+ * @author Siva
+ *
+ */
+@Configuration
+@ComponentScan(basePackages={"com.sivalabs.springapp"})
+//@ImportResource(value="classpath:applicationContext.xml")
+@EnableTransactionManagement
+@PropertySource(value = { "classpath:application.properties" })
+public class AppConfig {
+
+	@Autowired
+	private Environment env;
+	
+	@Value("${init-db:false}")
+	private String initDatabase;
+	
+	@Autowired
+	private UserService userService;
+		
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer placeHolderConfigurer()
+	{
+		return new PropertySourcesPlaceholderConfigurer();
+	}
+
+	@Bean
+	public PlatformTransactionManager transactionManager(DataSource dataSource)
+	{
+		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
+		return transactionManager;
+	}
+	
+	@Bean
+	public JdbcTemplate jdbcTemplate() 
+	{
+		return new JdbcTemplate(dataSource());
+	}
+	
+	@Bean
+	public DataSource dataSource()
+	{
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
+		dataSource.setUrl(env.getProperty("jdbc.url"));
+		dataSource.setUsername(env.getProperty("jdbc.username"));
+		dataSource.setPassword(env.getProperty("jdbc.password"));
+		return dataSource;
+	}	
+	
+	@Bean
+	public DataSourceInitializer dataSourceInitializer() 
+	{
+		DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+		dataSourceInitializer.setDataSource(dataSource());
+		ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
+		databasePopulator.addScript(new ClassPathResource("db.sql"));
+		dataSourceInitializer.setDatabasePopulator(databasePopulator);
+		dataSourceInitializer.setEnabled(Boolean.parseBoolean(initDatabase));
+		return dataSourceInitializer;
+	}
+}
+
+============================================================================================================
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+hibernate.show_sql=true
+hibernate.hbm2ddl.auto=update
+
+@Configuration
+@ComponentScan(basePackages={"com.sivalabs.springapp"}
+		//,excludeFilters=@ComponentScan.Filter(type=FilterType.ANNOTATION, value=Configuration.class)
+)
+//@ImportResource(value="classpath:applicationContext.xml")
+@PropertySource(value = { "classpath:application.properties" })
+public class AppConfig {
+
+	@Autowired
+	private Environment env;
+
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer placeHolderConfigurer()
+	{
+		return new PropertySourcesPlaceholderConfigurer();
+	}
+
+}
+
+/**
+ * 
+ */
+package com.sivalabs.springapp.config;
+
+
+import java.util.Properties;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
+import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+/**
+ * @author Siva
+ *
+ */
+@Configuration
+@EnableTransactionManagement
+@PropertySource(value = { "classpath:application.properties" })
+public class PersistenceConfig {
+
+	@Autowired
+	private Environment env;
+
+	@Bean
+	public PlatformTransactionManager transactionManager()
+	{
+		EntityManagerFactory factory = entityManagerFactory().getObject();
+		return new JpaTransactionManager(factory);
+	}
+
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
+	{
+		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+
+		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+		vendorAdapter.setGenerateDdl(Boolean.TRUE);
+		vendorAdapter.setShowSql(Boolean.TRUE);
+
+		factory.setDataSource(dataSource());
+		factory.setJpaVendorAdapter(vendorAdapter);
+		factory.setPackagesToScan("com.sivalabs.springapp.entities");
+
+		Properties jpaProperties = new Properties();
+		jpaProperties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+		factory.setJpaProperties(jpaProperties);
+
+		factory.afterPropertiesSet();
+		factory.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
+		return factory;
+	}
+
+	@Bean
+	public HibernateExceptionTranslator hibernateExceptionTranslator()
+	{
+		return new HibernateExceptionTranslator();
+	}
+	
+	@Bean
+	public DataSource dataSource()
+	{
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
+		dataSource.setUrl(env.getProperty("jdbc.url"));
+		dataSource.setUsername(env.getProperty("jdbc.username"));
+		dataSource.setPassword(env.getProperty("jdbc.password"));
+		return dataSource;
+	}
+	
+	
+}
+
+======================================================================================
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+ 
+ 	<!-- needed for ContextLoaderListener -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
+	</context-param>
+
+	<!-- Bootstraps the root web application context before servlet initialization -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- Map all requests to the DispatcherServlet for handling -->
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+ </web-app>
+
+ 
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+	
+	<context:component-scan base-package="com.sivalabs.springapp.web"/>
+	
+	<mvc:annotation-driven/>  
+	
+	<mvc:resources location="/resources/" mapping="/resources/**"/>
+
+   <bean id="viewResolver" 
+    	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    
+    <bean id="messageSource" 
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages"></property>
+	</bean>
+	
+</beans>
+
+
+<jpa:repositories base-package="com.sivalabs.springapp.repositories"/>
+
+public interface UserRepository extends JpaRepository<User, Serializable>{
+
+	@Query("select u from User u where u.email=?1 and u.password=?2")
+	User login(String email, String password);
+
+	User findByEmailAndPassword(String email, String password);
+
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+ 
+ 	<!-- Configure ContextLoaderListener to use AnnotationConfigWebApplicationContext
+       instead of the default XmlWebApplicationContext -->
+  	<context-param>
+      <param-name>contextClass</param-name>
+      <param-value>
+          org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+      </param-value>
+  </context-param>
+
+  	<!-- Configuration locations must consist of one or more comma- or space-delimited
+       fully-qualified @Configuration classes. Fully-qualified packages may also be
+       specified for component-scanning -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>com.sivalabs.springapp.config.AppConfig</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+	        <param-name>contextClass</param-name>
+	        <param-value>
+	            org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+	        </param-value>
+	    </init-param>
+	    <init-param>
+	        <param-name>contextConfigLocation</param-name>
+	        <param-value>
+	            com.sivalabs.springapp.web.config.WebMvcConfig
+	        </param-value>
+	    </init-param>
+	    <load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<filter>
+        <filter-name>OpenEntityManagerInViewFilter</filter-name>
+        <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OpenEntityManagerInViewFilter</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+    
+ </web-app>
+
+ 
+ /**
+ * 
+ */
+package com.sivalabs.springapp.web.config;
+
+import java.util.Properties;
+
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+/**
+ * @author Siva
+ * 
+ */
+@Configuration
+@ComponentScan(basePackages = { "com.sivalabs.springapp.web"}) 
+@EnableWebMvc
+public class WebMvcConfig extends WebMvcConfigurerAdapter
+{
+
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry)
+	{
+		super.addViewControllers(registry);
+		registry.addViewController("welcome").setViewName("welcome");
+		registry.addViewController("admin").setViewName("admin");
+	}
+
+	@Bean
+	public ViewResolver resolver()
+	{
+		InternalResourceViewResolver url = new InternalResourceViewResolver();
+		url.setPrefix("/WEB-INF/jsp/");
+		url.setSuffix(".jsp");
+		return url;
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry)
+	{
+		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+	}
+
+	@Override
+	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer)
+	{
+		configurer.enable();
+	}
+
+	@Bean(name = "messageSource")
+	public MessageSource configureMessageSource()
+	{
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasename("classpath:messages");
+		messageSource.setCacheSeconds(5);
+		messageSource.setDefaultEncoding("UTF-8");
+		return messageSource;
+	}
+
+	@Bean
+	public SimpleMappingExceptionResolver simpleMappingExceptionResolver()
+	{
+		SimpleMappingExceptionResolver b = new SimpleMappingExceptionResolver();
+
+		Properties mappings = new Properties();
+		mappings.put("org.springframework.dao.DataAccessException", "error");
+		b.setExceptionMappings(mappings);
+		return b;
+	}
+}
+
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages="com.sivalabs.springapp.repositories")
+@PropertySource(value = { "classpath:application.properties" })
+public class PersistenceConfig 
+{
+
+}
+
+/**
+ * 
+ */
+package com.sivalabs.springapp.web.config;
+
+import javax.servlet.Filter;
+
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import com.sivalabs.springapp.config.AppConfig;
+
+/**
+ * @author Siva
+ *
+ */
+public class SpringWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer
+{
+
+	@Override
+	protected Class<?>[] getRootConfigClasses()
+	{
+		return new Class<?>[] { AppConfig.class};
+	}
+
+	@Override
+	protected Class<?>[] getServletConfigClasses()
+	{
+		return new Class<?>[] { WebMvcConfig.class };
+	}
+
+	@Override
+	protected String[] getServletMappings()
+	{
+
+		return new String[] { "/" };
+	}
+
+	@Override
+    protected Filter[] getServletFilters() {
+       return new Filter[]{ new OpenEntityManagerInViewFilter()};
+    } 
+
+
+}
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+
+	
+	<http pattern="/resources/**" security="none"/>
+	
+	
+	<http auto-config="true" use-expressions="true">
+		
+		<intercept-url pattern="/" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_USER')"/>
+		<intercept-url pattern="/login/*" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_USER')"/>
+		<intercept-url pattern="/logout" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_USER')"/>
+		<intercept-url pattern="/admin/*" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+		
+		<form-login login-page="/login/form"
+					login-processing-url="/login"
+					username-parameter="username"
+					password-parameter="password"
+					authentication-failure-url="/login/form?error"/>
+		
+		<logout logout-url="/logout" logout-success-url="/login/form?logout"/>
+		
+	</http>
+<!-- 	
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="customUserDetailsService"/>
+	</authentication-manager>
+ -->
+	<authentication-manager>
+		
+		<authentication-provider>
+		
+			<jdbc-user-service id="userDetailsService" data-source-ref="dataSource"
+				users-by-username-query="select email, password, true from users where email = ?"
+				authorities-by-username-query="select u.email, r.role_name from users u, roles r where u.email = ? and u.id = r.user_id"
+			/>
+			
+			<!-- 
+			<user-service>
+				<user name="siva" password="siva" authorities="ROLE_USER" />
+				<user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN" />
+			</user-service>
+			 -->
+			
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>
+
+
+/**
+ * 
+ */
+package com.sivalabs.springapp.config;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+//import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+/**
+ * @author Siva
+ *
+ */
+@Configuration
+@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true) 
+//@ImportResource("classpath:applicationContext-security.xml")
+public class SecurityConfig extends WebSecurityConfigurerAdapter
+{
+	@Autowired
+	private DataSource dataSource;
+
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
+
+	@Override
+    protected void configure(AuthenticationManagerBuilder registry) throws Exception {
+		/*
+        registry
+        .inMemoryAuthentication()
+        .withUser("siva")  // #1
+          .password("siva")
+          .roles("USER")
+          .and()
+        .withUser("admin") // #2
+          .password("admin")
+          .roles("ADMIN","USER");
+        */
+        
+       // registry.jdbcAuthentication().dataSource(dataSource);
+		registry.userDetailsService(customUserDetailsService);
+    }
+
+
+	  @Override
+	  public void configure(WebSecurity web) throws Exception {
+	    web
+	      .ignoring()
+	         .antMatchers("/resources/**"); // #3
+	  }
+
+	  @Override
+	  protected void configure(HttpSecurity http) throws Exception {
+	    http
+	    .csrf().disable()
+	    .authorizeRequests()
+	        .antMatchers("/login","/login/form**","/register","/logout").permitAll() // #4
+	        .antMatchers("/admin","/admin/**").hasRole("ADMIN") // #6
+	        .anyRequest().authenticated() // 7
+	        .and()
+	    .formLogin()  // #8
+	        .loginPage("/login/form") // #9
+	        .loginProcessingUrl("/login")
+	        .failureUrl("/login/form?error")
+	        .permitAll(); // #5
+	  }
+}
+
+
+@Component
+public class CustomUserDetailsService implements UserDetailsService{
+
+	@Autowired
+	private UserService userService;
+	
+	@Override
+	public UserDetails loadUserByUsername(String userName)
+			throws UsernameNotFoundException {
+		User user = userService.findUserByEmail(userName);
+		if(user == null){
+			throw new UsernameNotFoundException("UserName "+userName+" not found");
+		}
+		return new SecurityUser(user);
+	}
+
+}
+
+public class SpringWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer
+{
+
+	@Override
+	protected Class<?>[] getRootConfigClasses()
+	{
+		return new Class<?>[] { AppConfig.class, SecurityConfig.class};
+	}
+
+	@Override
+	protected Class<?>[] getServletConfigClasses()
+	{
+		return new Class<?>[] { WebMvcConfig.class };
+	}
+
+	@Override
+	protected String[] getServletMappings()
+	{
+
+		return new String[] { "/" };
+	}
+
+	@Override
+    protected Filter[] getServletFilters() {
+       return new Filter[]{ 
+    		   new DelegatingFilterProxy("springSecurityFilterChain"),
+    		   new OpenEntityManagerInViewFilter()};
+    } 
+
+
+}
+
+/**
+ * 
+ */
+package com.sivalabs.springapp.web.config;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.sivalabs.springapp.entities.Role;
+import com.sivalabs.springapp.entities.User;
+
+/**
+ * @author Siva
+ *
+ */
+public class SecurityUser extends User implements UserDetails
+{
+
+	private static final long serialVersionUID = 1L;
+	public SecurityUser(User user) {
+		if(user != null)
+		{
+			this.setId(user.getId());
+			this.setName(user.getName());
+			this.setEmail(user.getEmail());
+			this.setPassword(user.getPassword());
+			this.setDob(user.getDob());
+			this.setRoles(user.getRoles());
+		}		
+	}
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		
+		Collection<GrantedAuthority> authorities = new ArrayList<>();
+		Set<Role> userRoles = this.getRoles();
+		
+		if(userRoles != null)
+		{
+			for (Role role : userRoles) {
+				SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getRoleName());
+				authorities.add(authority);
+			}
+		}
+		return authorities;
+	}
+
+	@Override
+	public String getPassword() {
+		return super.getPassword();
+	}
+
+	@Override
+	public String getUsername() {
+		return super.getEmail();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+	
+}
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<context:property-placeholder location="classpath:application.properties"/>
+	
+	<context:component-scan base-package="com.sivalabs.springapp" use-default-filters="true">
+		<context:exclude-filter type="regex" expression="com.sivalabs.springapp.web.*"/>
+	</context:component-scan>
+	
+	<jpa:repositories base-package="com.sivalabs.springapp.repositories"/>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+      		p:entityManagerFactory-ref="emf"/>
+     
+     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      	<property name="dataSource" ref="dataSource"></property>
+      	<property name="jpaVendorAdapter">
+      		<bean id="jpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+        			p:showSql="${hibernate.show_sql}"/>
+      	</property>
+      	<property name="jpaProperties">
+      		<props>
+      			<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+      			<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+      		</props>
+      	</property>
+      	<property name="packagesToScan" value="com.sivalabs.springapp.entities"></property>
+      	<property name="loadTimeWeaver">
+         <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+       </property>
+   </bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	    <property name="driverClassName" value="${jdbc.driverClassName}"/>
+	    <property name="url" value="${jdbc.url}"/>
+	    <property name="username" value="${jdbc.username}"/>
+	    <property name="password" value="${jdbc.password}"/>
+	    <property name="validationQuery" value="SELECT 1"/>
+	</bean>
+	 
+</beans>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+
+	
+	<http pattern="/resources/**" security="none"/>
+	
+	
+	<http auto-config="true" use-expressions="true">
+		
+		<intercept-url pattern="/" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_USER')"/>
+		<intercept-url pattern="/login/*" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_USER')"/>
+		<intercept-url pattern="/logout" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_USER')"/>
+		<intercept-url pattern="/admin/*" access="hasRole('ROLE_ADMIN')"/>
+		<intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
+		
+		<form-login login-page="/login/form"
+					login-processing-url="/login"
+					username-parameter="username"
+					password-parameter="password"
+					authentication-failure-url="/login/form?error"/>
+		
+		<logout logout-url="/logout" logout-success-url="/login/form?logout"/>
+		
+	</http>
+<!-- 	
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="customUserDetailsService"/>
+	</authentication-manager>
+ -->
+	<authentication-manager>
+		
+		<authentication-provider>
+		
+			<jdbc-user-service id="userDetailsService" data-source-ref="dataSource"
+				users-by-username-query="select email, password, true from users where email = ?"
+				authorities-by-username-query="select u.email, r.role_name from users u, roles r where u.email = ? and u.id = r.user_id"
+			/>
+			
+			<!-- 
+			<user-service>
+				<user name="siva" password="siva" authorities="ROLE_USER" />
+				<user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN" />
+			</user-service>
+			 -->
+			
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+ 
+ 	<!-- needed for ContextLoaderListener -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
+	</context-param>
+
+	<!-- Bootstraps the root web application context before servlet initialization -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- Map all requests to the DispatcherServlet for handling -->
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	
+	<filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+	
+	<filter>
+        <filter-name>OpenEntityManagerInViewFilter</filter-name>
+        <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OpenEntityManagerInViewFilter</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+	
+ </web-app>
+
+ 
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+	
+	<context:component-scan base-package="com.sivalabs.springapp.web"/>
+	
+	<mvc:annotation-driven/>  
+	
+	<mvc:resources location="/resources/" mapping="/resources/**"/>
+
+   <bean id="viewResolver" 
+    	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    
+    <bean id="messageSource" 
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages"></property>
+	</bean>
+	
+</beans>
+

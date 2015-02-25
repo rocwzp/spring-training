@@ -1,0 +1,101 @@
+
+<br />
+<form role="form" class="col-md-6">
+	<div class="input-group">
+		<input type="text" class="form-control" placeholder="Search Users"
+			ng-model="query"> <span class="input-group-btn">
+			<button class="btn btn-default" type="button"
+				ng-click="searchUsers()">Search</button>&nbsp;&nbsp;
+			<button type="button" class="btn btn-primary"
+				ng-click="newUserForm()">New User</button>
+		</span>
+	</div>
+</form>
+<br />
+<br />
+
+<table class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="user in users">
+			<td>{{user.id}}</td>
+			<td>{{user.name}}</td>
+			<td>{{user.email}}</td>
+			<td>
+				<button type="button" class="btn btn-primary"
+					ng-click="editUserForm(user.id)">Edit</button>&nbsp;&nbsp;
+				<button type="button" class="btn btn-danger"
+					ng-click="deleteUser(user.id)">Delete</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<br />
+
+<div class="panel panel-primary" ng-show="newUser">
+	<div class="panel-heading">New User Form</div>
+	<div class="panel-body">
+
+		<form role="form" name="new_user_form">
+
+			<div class="form-group">
+				<label for="name">Name</label> <input type="text"
+					class="form-control" id="name" ng-model="newUser.name">
+			</div>
+			<div class="form-group">
+				<label for="email">Email</label> <input type="text"
+					class="form-control" id="email" ng-model="newUser.email">
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label> <input type="password"
+					class="form-control" id="password" ng-model="newUser.password">
+			</div>
+		</form>
+	</div>
+	<div class="panel-footer">
+		<button type="button" class="btn btn-primary" ng-click="createUser()">Save</button>
+		&nbsp;&nbsp;
+	</div>
+</div>
+
+<div class="panel panel-primary" ng-show="currentUser">
+	<div class="panel-heading">Edit User</div>
+	<div class="panel-body">
+
+		<form role="form" name="edit_user_form">
+
+			<div class="form-group">
+				<label for="userId">Id</label> <input type="text"
+					class="form-control" id="userId" ng-model="currentUser.id"
+					ng-readonly="true" placeholder="UserId">
+			</div>
+			<div class="form-group">
+				<label for="name">Name</label> <input type="text"
+					class="form-control" id="name" ng-model="currentUser.name">
+			</div>
+			<div class="form-group">
+				<label for="email">Email</label> <input type="text"
+					class="form-control" id="email" ng-model="currentUser.email">
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label> <input type="password"
+					class="form-control" id="password" ng-model="currentUser.password">
+			</div>
+		</form>
+	</div>
+	<div class="panel-footer">
+		<button type="button" class="btn btn-primary" ng-click="updateUser()">Save</button>
+		&nbsp;&nbsp;
+		<button type="button" class="btn btn-danger"
+			ng-click="deleteUser(currentUser.id)">Delete</button>
+	</div>
+</div>
+

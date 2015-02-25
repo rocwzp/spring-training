@@ -1,0 +1,36 @@
+/**
+ * 
+ */
+package com.sivalabs.springtraining.services;
+
+import java.util.List;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.sivalabs.springtraining.domain.Customer;
+import com.sivalabs.springtraining.services.CustomerLocator;
+
+/**
+ * @author Siva
+ *
+ */
+public class Main {
+
+	public static void main(String[] args) 
+	{
+		@SuppressWarnings("resource")
+		ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+		
+		CustomerLocator locator = ctx.getBean(CustomerLocator.class);
+		List<Customer> customers = locator.getCustomersWithLocations();
+		for (Customer customer : customers) {
+			System.err.println(customer.getName()+
+					" Latitude: "+customer.getAddress().getLatitude()+
+					", Longitude: "+customer.getAddress().getLongitude());
+		}
+		
+		
+	}
+
+}

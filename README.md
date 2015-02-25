@@ -1,2 +1,2 @@
-# scala-samples
-Scala Sample applications
+# SivaLabs Training Material
+Sample code for training classes
