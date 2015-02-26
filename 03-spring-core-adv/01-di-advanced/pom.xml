@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.sivalabs</groupId>
-		<artifactId>spring-training</artifactId>
+		<artifactId>03-spring-core-adv</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>01-di-advanced</artifactId>

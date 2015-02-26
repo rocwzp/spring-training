@@ -9,6 +9,17 @@
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 	</properties>
+	
+	<modules>
+		<module>01-why-spring</module>
+		<module>02-spring-core</module>
+		<module>03-spring-core-adv</module>
+		<module>04-spring-aop</module>
+		<module>05-spring-data-access</module>
+		<module>06-spring-web</module>
+		<module>07-spring-security</module>
+	</modules>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -64,8 +75,4 @@
 		</dependencies>
 	</dependencyManagement>
 
-
-	<modules>
-		<module>01-why-spring</module>
-	</modules>
 </project>

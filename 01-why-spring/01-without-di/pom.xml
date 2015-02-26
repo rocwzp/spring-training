@@ -7,9 +7,9 @@
 	
 	<parent>
 		<groupId>com.sivalabs</groupId>
-		<artifactId>spring-training</artifactId>
+		<artifactId>01-why-spring</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
 	<artifactId>01-without-di</artifactId>
