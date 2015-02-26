@@ -4,6 +4,7 @@ target
 .classpath
 .project
 .springBeans
+.tern-project
 bin
 build
 .gradle
