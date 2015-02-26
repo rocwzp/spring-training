@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<context:property-placeholder location="classpath:application.properties"/>
+	
+	<context:component-scan base-package="com.sivalabs.springtraining" use-default-filters="true">
+		<context:exclude-filter type="regex" expression="com.sivalabs.springtraining.web.*"/>
+	</context:component-scan>
+	
+	<jpa:repositories base-package="com.sivalabs.springtraining.repositories"/>
+	
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+      		p:entityManagerFactory-ref="emf"/>
+     
+     <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      	<property name="dataSource" ref="dataSource"></property>
+      	<property name="jpaVendorAdapter">
+      		<bean id="jpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+        			p:showSql="${hibernate.show_sql}"/>
+      	</property>
+      	<property name="jpaProperties">
+      		<props>
+      			<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+      			<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+      		</props>
+      	</property>
+      	<property name="packagesToScan" value="com.sivalabs.springtraining.entities"></property>
+      	<property name="loadTimeWeaver">
+         <bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+       </property>
+   </bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	    <property name="url" value="jdbc:mysql://localhost:3306/training"/>
+	    <property name="username" value="root"/>
+	    <property name="password" value="admin"/>
+	    <property name="validationQuery" value="SELECT 1"/>
+	</bean>
+	 
+</beans>
